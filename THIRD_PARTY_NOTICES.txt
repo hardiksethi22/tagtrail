@@ -1,0 +1,25 @@
+TagTrail third-party notices
+============================
+
+GoogleFindMyTools
+-----------------
+The bundled worker includes code from GoogleFindMyTools at
+https://github.com/leonboe1/GoogleFindMyTools
+Pinned source commit: 660be5395702ff7f1a6174f4ec4c865a57c7b527
+The upstream project is licensed under GNU GPL version 3. Its complete
+license text is included with the application at
+Contents/Resources/ThirdPartyNotices/GoogleFindMyTools-LICENSE.txt.
+
+Python runtime dependencies
+---------------------------
+The packaged worker's Python distributions and their license metadata are
+listed in Contents/Resources/ThirdPartyNotices/python-dependencies.txt.
+License texts distributed with those packages are included in the adjacent
+python/ directory when available in their installed package metadata.
+
+Distribution note
+-----------------
+This bundle includes a PyInstaller one-directory worker and pinned upstream
+source. Review all applicable licenses and source-offer obligations before
+redistribution. The package script creates only an ad-hoc-signed local
+development artifact; it is not a Developer ID-signed or notarized release.

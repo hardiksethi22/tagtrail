@@ -1,0 +1,684 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		077B4058E324508B0BD62938 /* WorkerProcessClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6901EB49DB135D93039146 /* WorkerProcessClient.swift */; };
+		0D751125D7D80D22348A88E6 /* TagTrailCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0D3AB9438CE365463EB7E116 /* TagTrailCore */; };
+		0D8E8A545EEA264F98182221 /* NativeServiceChecks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17537B8A612B9CBA793CA8D0 /* NativeServiceChecks.swift */; };
+		163FF3043816E84624314299 /* SchedulingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16EDF5EB1E742E191BCB749 /* SchedulingPolicy.swift */; };
+		164F11CD07E20695528095E4 /* ProtocolFixtureChecks.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE425DE55C53C620FB90FB84 /* ProtocolFixtureChecks.swift */; };
+		1FF118B6D56CDD27E93B8DEA /* ConnectivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA1D04C2E572C916C7ECECD /* ConnectivityMonitor.swift */; };
+		2139B0A8E6CA32767F00A153 /* CoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BB11D95A748BCB92D181FD /* CoreTests.swift */; };
+		27340382B49539C32615096A /* GoogleTrackerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD50A7BAF0A8C6006225526 /* GoogleTrackerProvider.swift */; };
+		2B7E15BB9AC21E90E1BBE89E /* PollCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E2FEC189B0445C30C7F15F /* PollCoordinator.swift */; };
+		320B99F5FF8A38FB139FEC96 /* ObservationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADBAA4BB28B0C3D71804D9C /* ObservationHistory.swift */; };
+		4115B7563F9AB320E012584F /* DemoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2253FD22D7EC31A9EB5BA8 /* DemoProvider.swift */; };
+		413EDBB3867558A4A3761482 /* PortableTestRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A6ED6AD6B44FEB27DB1546 /* PortableTestRunner.swift */; };
+		4D86E11447F0EB9BD20A6AEB /* worker-fixture.sh in Resources */ = {isa = PBXBuildFile; fileRef = 3DAF731A8DE0667A93A5F341 /* worker-fixture.sh */; };
+		5B4F4FA1487655F25544CEA1 /* TrackerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BE84C08DF7579AF553AF23 /* TrackerProvider.swift */; };
+		5EB5E4791B61B14A1BB2C48F /* TagTrailCore in Frameworks */ = {isa = PBXBuildFile; productRef = 8A9CE6839A2CA2CFE507E9C2 /* TagTrailCore */; };
+		69B7C5F8B788A20F1E5F06A3 /* TagTrailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0299AF8DA026524E08240553 /* TagTrailViews.swift */; };
+		6EC45F85979E455E0AC2B36B /* TagTrailApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87855B7D9F76E2A02618CC44 /* TagTrailApp.swift */; };
+		722920974431F0A5C101FB92 /* DatabaseOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CE4782DE58CB1630BCE78B /* DatabaseOpener.swift */; };
+		79BA4957CE84BFE3C7309E62 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333A32412A5BEB341BF25CB7 /* AppModel.swift */; };
+		7AEBFF8F3618E61533A1B1C8 /* KeychainCredentialStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C915773884028D87427BF5 /* KeychainCredentialStore.swift */; };
+		7BAB1DA9A9276D7A455259A4 /* GeocodingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D288E3EE023903919761250 /* GeocodingService.swift */; };
+		9309B61E9BA84A860A28A9D9 /* protocol-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 62D7FA5D2D4DB2F5FC1DA8B4 /* protocol-v1.json */; };
+		A02B47D203CAA8D62E40A19E /* ServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7D41B1148C87721C3D77A2 /* ServiceTests.swift */; };
+		BA847A51BE5AC5183AFAE0C0 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7923DD0B642B0FA2F2467A /* Clock.swift */; };
+		D84FE909C16B7CC4FBD28DA9 /* TagTrailCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9677FDC18B833B77B5DA0A1F /* TagTrailCore */; };
+		F2F8F99C830C3FC15AE2D81A /* protocol-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 75F3FCD0445A9BD85A14888C /* protocol-v1.json */; };
+		F3F4FAD2344766BA74F27394 /* AppSmokeRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EC1BF0F73D99480A19A91A /* AppSmokeRunner.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		987FDB693E25455FB9B14B2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0F77C3AB1C0D81C225E023C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 539749F2135A7D396428391C;
+			remoteInfo = TagTrail;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0299AF8DA026524E08240553 /* TagTrailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTrailViews.swift; sourceTree = "<group>"; };
+		0CD50A7BAF0A8C6006225526 /* GoogleTrackerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleTrackerProvider.swift; sourceTree = "<group>"; };
+		13EC1BF0F73D99480A19A91A /* AppSmokeRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSmokeRunner.swift; sourceTree = "<group>"; };
+		17537B8A612B9CBA793CA8D0 /* NativeServiceChecks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeServiceChecks.swift; sourceTree = "<group>"; };
+		1B2253FD22D7EC31A9EB5BA8 /* DemoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoProvider.swift; sourceTree = "<group>"; };
+		2A3AD5DB70061E99BAD54563 /* TagTrail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TagTrail.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C0993F13274DE5C4D40D76B /* TagTrailAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagTrailAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C7923DD0B642B0FA2F2467A /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		333A32412A5BEB341BF25CB7 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		37C915773884028D87427BF5 /* KeychainCredentialStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainCredentialStore.swift; sourceTree = "<group>"; };
+		3D288E3EE023903919761250 /* GeocodingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingService.swift; sourceTree = "<group>"; };
+		3DAF731A8DE0667A93A5F341 /* worker-fixture.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "worker-fixture.sh"; sourceTree = "<group>"; };
+		4849701A9AE4424A6151B527 /* TagTrailCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagTrailCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		56E2FEC189B0445C30C7F15F /* PollCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCoordinator.swift; sourceTree = "<group>"; };
+		62D7FA5D2D4DB2F5FC1DA8B4 /* protocol-v1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "protocol-v1.json"; sourceTree = "<group>"; };
+		64BE84C08DF7579AF553AF23 /* TrackerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerProvider.swift; sourceTree = "<group>"; };
+		70A6ED6AD6B44FEB27DB1546 /* PortableTestRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortableTestRunner.swift; sourceTree = "<group>"; };
+		75BB11D95A748BCB92D181FD /* CoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTests.swift; sourceTree = "<group>"; };
+		75F3FCD0445A9BD85A14888C /* protocol-v1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "protocol-v1.json"; sourceTree = "<group>"; };
+		87855B7D9F76E2A02618CC44 /* TagTrailApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTrailApp.swift; sourceTree = "<group>"; };
+		88D478D8534783426C9AC955 /* TagTrail */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TagTrail; path = .; sourceTree = SOURCE_ROOT; };
+		9C7D41B1148C87721C3D77A2 /* ServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTests.swift; sourceTree = "<group>"; };
+		A16EDF5EB1E742E191BCB749 /* SchedulingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulingPolicy.swift; sourceTree = "<group>"; };
+		C4CE4782DE58CB1630BCE78B /* DatabaseOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseOpener.swift; sourceTree = "<group>"; };
+		CE425DE55C53C620FB90FB84 /* ProtocolFixtureChecks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolFixtureChecks.swift; sourceTree = "<group>"; };
+		DADBAA4BB28B0C3D71804D9C /* ObservationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationHistory.swift; sourceTree = "<group>"; };
+		EB6901EB49DB135D93039146 /* WorkerProcessClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerProcessClient.swift; sourceTree = "<group>"; };
+		FEA1D04C2E572C916C7ECECD /* ConnectivityMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityMonitor.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		105DD3106C8FCF4DF2369B5F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84FE909C16B7CC4FBD28DA9 /* TagTrailCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29C3B605F8EF6E3FA7211899 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EB5E4791B61B14A1BB2C48F /* TagTrailCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DB02ECB8D851293DF54148E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D751125D7D80D22348A88E6 /* TagTrailCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0463208D428F6047838B7D4E /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				88D478D8534783426C9AC955 /* TagTrail */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		0562AF86D513D17E1BC5ED7A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				333A32412A5BEB341BF25CB7 /* AppModel.swift */,
+				13EC1BF0F73D99480A19A91A /* AppSmokeRunner.swift */,
+				17537B8A612B9CBA793CA8D0 /* NativeServiceChecks.swift */,
+				87855B7D9F76E2A02618CC44 /* TagTrailApp.swift */,
+				316E53D3D5169A4BA7EAB7F7 /* Services */,
+				706CD6777EA067CA3A83E7A4 /* Views */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2663C3222665623A444FB11A /* AppTests */ = {
+			isa = PBXGroup;
+			children = (
+				70A6ED6AD6B44FEB27DB1546 /* PortableTestRunner.swift */,
+				62D7FA5D2D4DB2F5FC1DA8B4 /* protocol-v1.json */,
+				9C7D41B1148C87721C3D77A2 /* ServiceTests.swift */,
+				3DAF731A8DE0667A93A5F341 /* worker-fixture.sh */,
+			);
+			path = AppTests;
+			sourceTree = "<group>";
+		};
+		2745C447170A5B2607FBBD0D = {
+			isa = PBXGroup;
+			children = (
+				0562AF86D513D17E1BC5ED7A /* App */,
+				2663C3222665623A444FB11A /* AppTests */,
+				A27A0EC2A9AD3A371375C375 /* fixtures */,
+				0463208D428F6047838B7D4E /* Packages */,
+				F88D878130A25D14CDC4052D /* TagTrailCoreTests */,
+				7102DE24A65F6741583C3E03 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		316E53D3D5169A4BA7EAB7F7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2C7923DD0B642B0FA2F2467A /* Clock.swift */,
+				FEA1D04C2E572C916C7ECECD /* ConnectivityMonitor.swift */,
+				C4CE4782DE58CB1630BCE78B /* DatabaseOpener.swift */,
+				1B2253FD22D7EC31A9EB5BA8 /* DemoProvider.swift */,
+				3D288E3EE023903919761250 /* GeocodingService.swift */,
+				0CD50A7BAF0A8C6006225526 /* GoogleTrackerProvider.swift */,
+				37C915773884028D87427BF5 /* KeychainCredentialStore.swift */,
+				DADBAA4BB28B0C3D71804D9C /* ObservationHistory.swift */,
+				56E2FEC189B0445C30C7F15F /* PollCoordinator.swift */,
+				CE425DE55C53C620FB90FB84 /* ProtocolFixtureChecks.swift */,
+				A16EDF5EB1E742E191BCB749 /* SchedulingPolicy.swift */,
+				64BE84C08DF7579AF553AF23 /* TrackerProvider.swift */,
+				EB6901EB49DB135D93039146 /* WorkerProcessClient.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		706CD6777EA067CA3A83E7A4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0299AF8DA026524E08240553 /* TagTrailViews.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7102DE24A65F6741583C3E03 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A3AD5DB70061E99BAD54563 /* TagTrail.app */,
+				2C0993F13274DE5C4D40D76B /* TagTrailAppTests.xctest */,
+				4849701A9AE4424A6151B527 /* TagTrailCoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A27A0EC2A9AD3A371375C375 /* fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				75F3FCD0445A9BD85A14888C /* protocol-v1.json */,
+			);
+			name = fixtures;
+			path = worker/fixtures;
+			sourceTree = "<group>";
+		};
+		F88D878130A25D14CDC4052D /* TagTrailCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				75BB11D95A748BCB92D181FD /* CoreTests.swift */,
+			);
+			name = TagTrailCoreTests;
+			path = Tests/TagTrailCoreTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1734ACB404A7CEE145DFBE02 /* TagTrailAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78F0E3D3F55ABCCD5835B6CE /* Build configuration list for PBXNativeTarget "TagTrailAppTests" */;
+			buildPhases = (
+				C82D621376C7FDB139ED0A11 /* Sources */,
+				6F01BB5C03BDF1EE5DF88684 /* Resources */,
+				29C3B605F8EF6E3FA7211899 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCC28FEC363BA0835F12A4F0 /* PBXTargetDependency */,
+			);
+			name = TagTrailAppTests;
+			packageProductDependencies = (
+				8A9CE6839A2CA2CFE507E9C2 /* TagTrailCore */,
+			);
+			productName = TagTrailAppTests;
+			productReference = 2C0993F13274DE5C4D40D76B /* TagTrailAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		539749F2135A7D396428391C /* TagTrail */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E18560BB63CC1DB665654F3 /* Build configuration list for PBXNativeTarget "TagTrail" */;
+			buildPhases = (
+				87FCD00EB9074D38A25F9B9F /* Sources */,
+				E7785E35766F66B6E7C06237 /* Resources */,
+				105DD3106C8FCF4DF2369B5F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TagTrail;
+			packageProductDependencies = (
+				9677FDC18B833B77B5DA0A1F /* TagTrailCore */,
+			);
+			productName = TagTrail;
+			productReference = 2A3AD5DB70061E99BAD54563 /* TagTrail.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B5AD6F9151FB9601753A00A7 /* TagTrailCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A34907584E9CD3E80995745 /* Build configuration list for PBXNativeTarget "TagTrailCoreTests" */;
+			buildPhases = (
+				FB9BF766EE9AFD5375E3D201 /* Sources */,
+				9DB02ECB8D851293DF54148E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TagTrailCoreTests;
+			packageProductDependencies = (
+				0D3AB9438CE365463EB7E116 /* TagTrailCore */,
+			);
+			productName = TagTrailCoreTests;
+			productReference = 4849701A9AE4424A6151B527 /* TagTrailCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0F77C3AB1C0D81C225E023C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					539749F2135A7D396428391C = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 23913C9B42560F87E96B03C5 /* Build configuration list for PBXProject "TagTrail" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 2745C447170A5B2607FBBD0D;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				47BD177F49B1A7DA1DB6175E /* XCLocalSwiftPackageReference "." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7102DE24A65F6741583C3E03 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				539749F2135A7D396428391C /* TagTrail */,
+				B5AD6F9151FB9601753A00A7 /* TagTrailCoreTests */,
+				1734ACB404A7CEE145DFBE02 /* TagTrailAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6F01BB5C03BDF1EE5DF88684 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9309B61E9BA84A860A28A9D9 /* protocol-v1.json in Resources */,
+				4D86E11447F0EB9BD20A6AEB /* worker-fixture.sh in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E7785E35766F66B6E7C06237 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2F8F99C830C3FC15AE2D81A /* protocol-v1.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		87FCD00EB9074D38A25F9B9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79BA4957CE84BFE3C7309E62 /* AppModel.swift in Sources */,
+				F3F4FAD2344766BA74F27394 /* AppSmokeRunner.swift in Sources */,
+				BA847A51BE5AC5183AFAE0C0 /* Clock.swift in Sources */,
+				1FF118B6D56CDD27E93B8DEA /* ConnectivityMonitor.swift in Sources */,
+				722920974431F0A5C101FB92 /* DatabaseOpener.swift in Sources */,
+				4115B7563F9AB320E012584F /* DemoProvider.swift in Sources */,
+				7BAB1DA9A9276D7A455259A4 /* GeocodingService.swift in Sources */,
+				27340382B49539C32615096A /* GoogleTrackerProvider.swift in Sources */,
+				7AEBFF8F3618E61533A1B1C8 /* KeychainCredentialStore.swift in Sources */,
+				0D8E8A545EEA264F98182221 /* NativeServiceChecks.swift in Sources */,
+				320B99F5FF8A38FB139FEC96 /* ObservationHistory.swift in Sources */,
+				2B7E15BB9AC21E90E1BBE89E /* PollCoordinator.swift in Sources */,
+				164F11CD07E20695528095E4 /* ProtocolFixtureChecks.swift in Sources */,
+				163FF3043816E84624314299 /* SchedulingPolicy.swift in Sources */,
+				6EC45F85979E455E0AC2B36B /* TagTrailApp.swift in Sources */,
+				69B7C5F8B788A20F1E5F06A3 /* TagTrailViews.swift in Sources */,
+				5B4F4FA1487655F25544CEA1 /* TrackerProvider.swift in Sources */,
+				077B4058E324508B0BD62938 /* WorkerProcessClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C82D621376C7FDB139ED0A11 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				413EDBB3867558A4A3761482 /* PortableTestRunner.swift in Sources */,
+				A02B47D203CAA8D62E40A19E /* ServiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FB9BF766EE9AFD5375E3D201 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2139B0A8E6CA32767F00A153 /* CoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DCC28FEC363BA0835F12A4F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 539749F2135A7D396428391C /* TagTrail */;
+			targetProxy = 987FDB693E25455FB9B14B2A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C10F572E807FF2AC7E297C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.tagtrail.app-tests";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TagTrail.app/Contents/MacOS/TagTrail";
+			};
+			name = Debug;
+		};
+		18E7C52122A3599C43402EFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.tagtrail.core-tests";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3632595BD86A9A2FF3B9A7A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.tagtrail.app-tests";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TagTrail.app/Contents/MacOS/TagTrail";
+			};
+			name = Release;
+		};
+		3E7F975CF5B636BC6F3FD32E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tagtrail.desktop;
+				PRODUCT_NAME = TagTrail;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		6238837BBE0BCCF24E04DD9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.tagtrail.core-tests";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9282F0DAF7CADD78CE2F2916 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B8826660DE0D7B8FA7A58FC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tagtrail.desktop;
+				PRODUCT_NAME = TagTrail;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		DC81FEA30D2F6462FE6E28AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A34907584E9CD3E80995745 /* Build configuration list for PBXNativeTarget "TagTrailCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18E7C52122A3599C43402EFE /* Debug */,
+				6238837BBE0BCCF24E04DD9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		23913C9B42560F87E96B03C5 /* Build configuration list for PBXProject "TagTrail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC81FEA30D2F6462FE6E28AA /* Debug */,
+				9282F0DAF7CADD78CE2F2916 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		78F0E3D3F55ABCCD5835B6CE /* Build configuration list for PBXNativeTarget "TagTrailAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C10F572E807FF2AC7E297C6 /* Debug */,
+				3632595BD86A9A2FF3B9A7A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9E18560BB63CC1DB665654F3 /* Build configuration list for PBXNativeTarget "TagTrail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E7F975CF5B636BC6F3FD32E /* Debug */,
+				B8826660DE0D7B8FA7A58FC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		47BD177F49B1A7DA1DB6175E /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0D3AB9438CE365463EB7E116 /* TagTrailCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TagTrailCore;
+		};
+		8A9CE6839A2CA2CFE507E9C2 /* TagTrailCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TagTrailCore;
+		};
+		9677FDC18B833B77B5DA0A1F /* TagTrailCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TagTrailCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 0F77C3AB1C0D81C225E023C0 /* Project object */;
+}

@@ -1,0 +1,29 @@
+{
+  "request": {
+    "protocol_version": 1,
+    "request_id": "fixture",
+    "command": "poll",
+    "timeout_ms": 45000,
+    "device_id": "fixture-device",
+    "credential_bundle": {"username": "fixture@example.invalid"}
+  },
+  "success_events": [
+    {"protocol_version": 1, "request_id": "fixture", "event": "ready", "payload": {}},
+    {"protocol_version": 1, "request_id": "fixture", "event": "progress", "payload": {"stage": "poll"}},
+    {"protocol_version": 1, "request_id": "fixture", "event": "credential_update", "credential_bundle": {"username": "fixture@example.invalid"}},
+    {
+      "protocol_version": 1,
+      "request_id": "fixture",
+      "event": "result",
+      "payload": {
+        "devices": [{"id": "fixture-device", "name": "Fixture Tracker", "network": "google"}],
+        "rejected_count": 0,
+        "sightings": [
+          {"device_id": "fixture-device", "kind": "geographic", "latitude": 0.0, "longitude": 0.0, "altitude": null, "accuracy": null, "provider_timestamp_ms": 1800000000000, "timestamp_provenance": "provider", "source": "google-find-my"},
+          {"device_id": "fixture-device", "kind": "semantic", "latitude": null, "longitude": null, "altitude": null, "accuracy": null, "provider_timestamp_ms": null, "timestamp_provenance": "unknown", "semantic_label": "Home", "source": "google-find-my"}
+        ]
+      }
+    }
+  ],
+  "error_event": {"protocol_version": 1, "request_id": "fixture", "event": "error", "code": "rate-limited", "retry_after_ms": 120000}
+}

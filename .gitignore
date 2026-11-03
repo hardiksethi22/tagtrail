@@ -1,0 +1,13 @@
+.build/
+.swiftpm/
+dist/
+worker/.venv/
+worker/.python/
+worker/.uv-cache/
+worker/build/
+worker/dist/
+worker/.pyinstaller-cache/
+worker/.browser-state/
+__pycache__/
+*.py[cod]
+.DS_Store

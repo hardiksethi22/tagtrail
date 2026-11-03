@@ -1,0 +1,18 @@
+{
+  "protocol_version": 1,
+  "request_examples": [
+    {"protocol_version":1,"request_id":"doctor-example","command":"doctor","timeout_ms":45000},
+    {"protocol_version":1,"request_id":"import-example","command":"authenticate","timeout_ms":45000,"credential_bundle":{}},
+    {"protocol_version":1,"request_id":"discover-example","command":"list_devices","timeout_ms":45000,"credential_bundle":{}},
+    {"protocol_version":1,"request_id":"poll-example","command":"poll","timeout_ms":45000,"device_id":"synthetic-tracker","credential_bundle":{}}
+  ],
+  "event_examples": [
+    {"protocol_version":1,"request_id":"poll-example","event":"ready","payload":{"worker":"TagTrailWorker"}},
+    {"protocol_version":1,"request_id":"poll-example","event":"progress","payload":{"stage":"checking-crypto"}},
+    {"protocol_version":1,"request_id":"poll-example","event":"credential_update","credential_bundle":{}},
+    {"protocol_version":1,"request_id":"discover-example","event":"result","payload":{"devices":[{"id":"synthetic-tracker","name":"合成 Tracker","network":"google"}]}},
+    {"protocol_version":1,"request_id":"poll-example","event":"result","payload":{"sightings":[{"device_id":"synthetic-tracker","kind":"geographic","latitude":0.0,"longitude":120.0,"altitude":4,"accuracy":12.5,"provider_timestamp_ms":1732120000123,"timestamp_provenance":"provider","source":"google-find-my"},{"device_id":"synthetic-tracker","kind":"semantic","semantic_label":"Synthetic Home","provider_timestamp_ms":1732120010000,"timestamp_provenance":"provider","source":"google-find-my"}],"rejected_count":0}},
+    {"protocol_version":1,"request_id":"poll-example","event":"error","code":"rate-limited","retry_after_ms":60000}
+  ],
+  "notes": "Each event example is independent except ready/progress/credential_update. Exactly one terminal result or error per real request. Empty import bundles intentionally fail authentication-required, not valid live credentials."
+}

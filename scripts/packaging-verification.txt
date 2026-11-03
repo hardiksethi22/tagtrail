@@ -1,0 +1,154 @@
+Packaging verification - macOS 26.7 arm64, Swift 6.2.3
+=====================================================
+
+Executed interfaces:
+make bootstrap
+  PASS: pinned prerequisites verified: Swift 6.2.3, XcodeGen 2.45.4, uv 0.8.3.
+  PASS: XcodeGen generated TagTrail.xcodeproj.
+  PASS: project-local Python 3.12.11 worker/.venv, 50 locked distributions audited.
+  PASS: uv 0.9.0 test double rejected before dependency changes.
+  Uses native system certificate trust, not disabled TLS verification.
+  Managed Python and uv cache are confined to worker/.python and worker/.uv-cache.
+  Full Xcode absent: XCTest/xcodebuild gates reported as not run.
+
+make build
+  PASS: release SwiftPM build wrapped .build/TagTrail.app.
+  Earlier compile failures in concurrently edited App sources were repaired
+  by their owner; those files were not modified by the packaging agent.
+
+make package
+  PASS (2026-11-03 12:55 local time): standard interface, no overrides.
+  Release app built; real PyInstaller
+  one-directory worker bundled in dist/TagTrail-arm64/TagTrail.app.
+  59 Mach-O minimum-OS checks and nested ad-hoc signing passed.
+  No Developer ID signing, notarization, or macOS 14 runtime claim.
+
+make smoke-packaged
+  PASS: relocated bundle into a temporary directory and app path with spaces.
+  PASS: bundled worker doctor reports Python 3.12.11,
+  cryptography 50.0.2, protobuf 6.33.6, pinned upstream commit
+  660be5395702ff7f1a6174f4ec4c865a57c7b527.
+  PASS: authenticate with credential_bundle={} reports
+  authentication-required and a nonzero exit.
+  Native app launch smoke is not claimed: --smoke-demo was not available
+  in App sources when checked. Requested from the native app owner.
+  Both make test and make smoke-packaged now require a bounded native
+  --smoke-demo invocation with explicit "PASS TagTrail smoke-demo" output.
+  The shared helper's success-marker enforcement was checked separately.
+
+make test
+  PASS: Swift XCTest availability probe detects missing module and explicitly
+  runs the parent-owned CoreChecks assertion executable, not XCTest.
+  CoreChecks PASS: database/validity/identity/display/CSV/settings/geocode/
+  mapping/retention. Measured 10000-observation ingestion 0.467673459 seconds;
+  indexed retrieval of 100 records 0.00051075 seconds on this host.
+  Swift XCTest itself remains BLOCKED: no such module XCTest with CLT.
+  Worker tests PASS: 28 tests including bundled-worker relocation and
+  minimum-OS artifact checks. This make test run predates the newly required
+  native app smoke; final suite awaits native --smoke-demo implementation.
+
+Static and artifact checks:
+  bash -n scripts/*.sh                         PASS
+  python3 -m py_compile scripts/*.py           PASS
+  plutil -lint Info.plist project.pbxproj      PASS
+  codesign --verify --deep --strict app        PASS
+  Development artifact release-signing guard PASS
+
+Remaining gates:
+  Native app deterministic --smoke-demo launch support.
+  Full Xcode for xcodebuild and XCTest.
+  macOS 14 machine/runtime checks and separately tested x86_64 artifacts.
+  Real credentials/hardware and Developer ID/notary credentials are not used.
+
+== Final interface verification (App --smoke-demo available) ==
+make bootstrap        -> exit 0; Swift 6.2.3, XcodeGen 2.45.4, uv 0.8.3, project-local Python 3.12.11, 50 locked packages audited
+make build            -> exit 0; .build/TagTrail.app (SwiftPM release build wrapped as LSUIElement accessory app)
+make run-demo         -> exit 0; ps showed .build/TagTrail.app/Contents/MacOS/TagTrail -TagTrail.demoMode YES; that PID alone stopped afterwards
+make test             -> exit 0; XCTest unavailable (CLT), CoreChecks PASS, app --smoke-demo PASS, worker 28 tests OK (XCTest not claimed)
+make package          -> exit 0; dist/TagTrail-arm64/TagTrail.app; 59 Mach-O files minos <= 14.0; ad-hoc signed; codesign --verify --deep --strict OK
+make smoke-packaged   -> exit 0; relocated to "<tmp>/TagTrail packaged smoke */relocated app with spaces.app"
+  PASS worker doctor (python 3.12.11, cryptography 50.0.2, protobuf 6.33.6, upstream 660be5395702ff7f1a6174f4ec4c865a57c7b527)
+  PASS import with credential_bundle {} -> authentication-required (nonzero)
+  PASS app --smoke-demo
+  PASS app launch: ps -p PID shows relocated executable (temp HOME/CFFIXED_USER_HOME, demo mode); only that PID is terminated
+make project          -> TagTrail.xcodeproj regenerated; git status '??' (untracked, not ignored); local package "." provides TagTrailCore; MACOSX_DEPLOYMENT_TARGET 14.0
+Signature: Identifier=app.tagtrail.desktop Signature=adhoc TeamIdentifier=not set. Arch: arm64 only.
+Notices: Resources/ThirdPartyNotices.txt, ThirdPartyNotices/GoogleFindMyTools-LICENSE.txt (GPL-3.0, 35149 bytes), python-dependencies.txt, python/ (48 distribution license dirs).
+Blocked: xcodebuild/XCTest (no full Xcode), x86_64/universal, macOS 14 runtime host, live Google account, Developer ID signing/notarization (sign-release requires credentials, none present).
+
+== Re-verification after worker venv recreated on project-local CPython 3.12.11 ==
+Finding: App --smoke-demo now requires a worker doctor. The DEBUG-only dev worker lookup meant release .build/TagTrail.app (no bundled worker) failed:
+  "FAIL TagTrail smoke-demo: local fixture verification failed."
+Fix (packaging-owned): build-app.sh [release|debug]; make build builds .build/TagTrail.app (release, packaging input)
+  and .build/TagTrail-Dev.app (debug; resolves worker/.venv/bin/python -m worker). run/run-demo/test app smoke use the Dev app.
+make bootstrap      -> exit 0
+make test           -> exit 0 (CoreChecks PASS; Dev app --smoke-demo PASS; worker Ran 28 tests OK; XCTest not run - CLT only)
+make build          -> exit 0 (release + debug bundles)
+make run-demo       -> exit 0; ps: .build/TagTrail-Dev.app/Contents/MacOS/TagTrail -TagTrail.demoMode YES; only that PID stopped
+make package        -> exit 0; 59 Mach-O files minos <= 14.0 (libpython3.12.dylib and tagtrail-worker minos 11.0); ad-hoc signed
+make smoke-packaged -> exit 0; relocated path with spaces: doctor PASS (3.12.11), {} -> authentication-required, app --smoke-demo PASS, launch ps PASS
+
+== Re-verification after worker added psutil (lock) ==
+.gitignore now also ignores worker/.pyinstaller-cache/ and worker/.browser-state/; TagTrail.xcodeproj stays tracked-eligible.
+make bootstrap/test/package/smoke-packaged -> all exit 0; psutil _psutil_osx.abi3.so bundled and within the 59 Mach-O minos<=14.0 check;
+psutil license packaged at Resources/ThirdPartyNotices/python/psutil. Live Google/Chrome flows unverified (no account).
+
+== Final: package.sh sets PYINSTALLER_CONFIG_DIR=worker/.pyinstaller-cache (project-local, ignored). make package/smoke-packaged/test re-run -> all exit 0 (59 Mach-O <=14.0, worker 28 tests OK).
+
+== bootstrap: uv python install --no-bin (no ~/.local/bin shims); verified uv accepts it and make bootstrap exit 0.
+
+== Parent final handoff ==
+make build && make package && make smoke-packaged -> exit 0 on final App; release+Dev bundles, 59 Mach-O <=14.0, relocated worker doctor/import and app smoke+ps all PASS.
+
+== Final parent requested check: make test/build/package/smoke-packaged ==
+All four exit 0; CoreChecks PASS; native Dev smoke PASS; worker 28 tests 16.509s OK; release build; 59 Mach-O <=14.0; relocated worker doctor/import, native app smoke-demo and launch ps PASS; strict deep signature verification PASS (ad-hoc).
+App service assertions are not yet invoked by make test: parent manifest needs CLT executable target integration (separate agent reports portable tests).
+
+== Final portable App services integrated and current release repackaged ==
+make test && make build && make package && make smoke-packaged -> combined exit 0.
+CoreChecks PASS; AppServiceChecks 15 service tests PASS via scripts/test-app-services.sh CLT compile/link runner; native Dev smoke PASS; worker29 tests in13.718s OK.
+Release/Dev bundles built; protocol-v1.json bundled (same AppTests fixture) in Resources and XcodeGen target; 59 Mach-O <=14.0; relocated worker doctor/import, release app smoke-demo and launch ps PASS. Strict deep codesign verification and project plutil lint PASS.
+Full output: .build/final-service-check.log and .build/final-package-check.log. Previous manifest-executable blocker resolved using agent-provided portable compile/link runner, no manifest change needed.
+
+== Latest App/core integration recheck ==
+make test/build/package/smoke-packaged all exit0; 15 App service assertions including full export/mapping PASS; worker29 tests14.392s OK; native debug and relocated release smoke PASS; 59 Mach-O <=14.0. ObservationHistory object already included in portable script.
+
+== After native AppTests scope restoration ==
+Combined make test && make build && make package && make smoke-packaged exit0. CoreChecks PASS, AppServiceChecks15 PASS, native smoke PASS, worker29 tests14.902s OK. Relocated release smoke-demo/worker doctor+import/launch ps PASS, 59 Mach-O <=14.0. Packaging did not edit AppTests.
+
+== Current canonical worker lookup recheck (supersedes previous PASS) ==
+make test: CoreChecks and15 AppServiceChecks PASS; worker29 PASS; native debug smoke exits1 local fixture verification failed.
+make build/package PASS (59 Mach-O <=14.0); make smoke-packaged FAIL native release smoke exits1; worker doctor/import still PASS. App agent notified; App-owned smoke dependency blocker pending fix. Logs .build/final-service-check.log and .build/canonical-final-package.log.
+
+== Parent combined recheck latest ==
+Fresh log .build/settled-test.log: make test fails native app smoke exit1; CoreChecks PASS,15 services PASS, worker29 tests14.432s OK. Build/package/smoke not reached by && chain. Prior .build/canonical-final-package.log records release native smoke failure too. No final-success claim until native agent fixes smoke. Canonical executable tagtrail-worker and TagTrailWorker symlink both exist.
+
+== After native release-ready signal: fresh settled recheck ==
+make test status2: core/15services/worker29 PASS, native debug smoke FAIL exit1. make build+package PASS, smoke-packaged status2: worker doctor/import PASS, native release smoke FAIL exit1. App runtime assertion remains blocker, not compilation. Full latest logs .build/settled-test.log / .build/settled-package.log.
+
+== FINAL corrected combined run, supersedes runtime failures ==
+make test status0: CoreChecks PASS; portable AppServiceChecks15 PASS (ObservationHistory+ProtocolFixtureChecks link fix); native Dev smoke PASS; worker29 tests14.592s OK.
+make build/package/smoke-packaged status0: current release+Dev wrappers; dist/TagTrail-arm64/TagTrail.app;59 Mach-O <=14.0; relocated worker doctor/import; RELEASE native smoke-demo and launch ps PASS.
+Shared canonical AppTests/protocol-v1.json equals bundled resource; strict deep ad-hoc codesign and native project plutil lint PASS. Latest logs .build/settled-test.log and .build/settled-package.log. No AppTests edits by packaging.
+
+== After FINAL App settled notification ==
+make package && make smoke-packaged exit0; canonical worker/tagtrail-worker and shared protocol-v1.json present; relocated native smoke-demo/doctor/import/launch ps PASS;59 Mach-O <=14.0;strict codesign PASS; fixture cmp PASS. Log .build/final-settled-acceptance.log. Parent owns README/VERIFICATION docs.
+
+== FINAL parent frozen-scope combined handoff ==
+make test && make build && make package && make smoke-packaged -> combined exit0.
+CoreChecks PASS;15 AppServiceChecks PASS;native Dev smoke PASS;29worker tests15.126s OK. Release+Dev bundles;59 Mach-O <=14.0;relocated worker doctor/import/native release smoke-demo/launch ps PASS. Strict codesign,project lint,shared fixture cmp PASS.
+Logs .build/final-handoff-test.log and .build/final-handoff-package.log. No further feature additions.
+
+== Final combined with native transport/scheduler --self-test ==
+make test/build/package/smoke-packaged all exit0. CoreChecks PASS;15 AppServices PASS;native debug self-test+smoke-demo PASS;worker29 tests15.858s OK. Relocated RELEASE self-test+smoke-demo/worker doctor+import/launch ps PASS.59 Mach-O <=14.0;strict ad-hoc signing/project lint PASS. Helpers enforce PASS and exit0; self-test timeout60, smoke timeout100 (App bounds50/90).
+Required unverified: rendered GUI and10000record UI, actual sleep/wake/connectivity notifications, real Keychain denial/import/refresh UI, live Google auth/discovery/poll/decrypt, macOS14 runtime/x86_64/fullXcode XCTest, DeveloperID/notarization.
+Logs .build/final-handoff-test.log and .build/final-handoff-package.log.
+
+== Final native timeout alignment repackage ==
+make package/smoke-packaged exit0;release self-test and smoke-demo PASS from relocated path;doctor/import/ps PASS;59 Mach-O <=14.0. External smoke timeout100s. Log .build/final-timeout-acceptance.log. macOS14 is deployment/binary audit only, not runtime validation.
+
+== Latest frozen App fresh run supersedes prior PASS ==
+make package PASS59 Mach-O<=14.0;make smoke-packaged FAIL native smoke-demo exit1 fixture verification; native self-test and worker doctor/import PASS. New log .build/latest-frozen-acceptance.log. Native agent notified intermittent smoke assertion suspected because earlier same gate passed.
+
+== Parent serialized final run (no concurrent package/test) ==
+make package status0; make test status2; make smoke-packaged status2. Worker29 tests15.928s OK, no copytree errors. CoreChecks/15services/native self-test PASS. Native smoke-demo FAIL both development and relocated release exit1. Log .build/serialized-final.log. App agent notified runtime blocker.

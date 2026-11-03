@@ -1,0 +1,62 @@
+name: TagTrail
+options:
+  bundleIdPrefix: app.tagtrail
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+
+packages:
+  TagTrail:
+    path: .
+
+targets:
+  TagTrail:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+      - path: worker/fixtures/protocol-v1.json
+        buildPhase: resources
+    dependencies:
+      - package: TagTrail
+        product: TagTrailCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.tagtrail.desktop
+        PRODUCT_NAME: TagTrail
+        INFOPLIST_FILE: Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_APP_SANDBOX: NO
+  TagTrailCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/TagTrailCoreTests
+    dependencies:
+      - package: TagTrail
+        product: TagTrailCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.tagtrail.core-tests
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+  TagTrailAppTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: AppTests
+    dependencies:
+      - target: TagTrail
+      - package: TagTrail
+        product: TagTrailCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.tagtrail.app-tests
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
