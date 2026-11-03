@@ -8,6 +8,7 @@ worker/build/
 worker/dist/
 worker/.pyinstaller-cache/
 worker/.browser-state/
+browser-artifacts/
 __pycache__/
 *.py[cod]
 .DS_Store

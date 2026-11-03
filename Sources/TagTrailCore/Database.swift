@@ -16,7 +16,7 @@ public actor Database {
                                                 attributes: [.posixPermissions: 0o700])
         var db: OpaquePointer?
         guard sqlite3_open_v2(url.path, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, nil) == SQLITE_OK else {
-            if let db { sqlite3_close(db) }
+            if let db { sqlite3_close_v2(db) }
             throw DataError.database("open-failed")
         }
         handle = db
@@ -25,9 +25,9 @@ public actor Database {
             sqlite3_busy_timeout(db, 3000)
             try Self.execute(db, "PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL;")
             try Self.migrate(db)
-        } catch { sqlite3_close(db); handle = nil; throw error }
+        } catch { sqlite3_close_v2(db); handle = nil; throw error }
     }
-    deinit { sqlite3_close(handle) }
+    deinit { sqlite3_close_v2(handle) }
 
     private static func execute(_ db: OpaquePointer?, _ sql: String) throws {
         guard sqlite3_exec(db, sql, nil, nil, nil) == SQLITE_OK else { throw DataError.database("sql-failed") }

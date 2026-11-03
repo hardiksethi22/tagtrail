@@ -337,26 +337,53 @@ class GoogleAdapter:
         device_id = self.request["device_id"]
         if device_id not in {device["id"] for device in self.list_devices()["devices"]}:
             raise WorkerError("unsupported-device")
-        request_uuid = str(uuid.uuid4())
+        # The trail request may return nothing (or only undecryptable reports)
+        # when the tracker has no enabled trail. Both request UUIDs are
+        # accepted by one callback so a current-location fallback can reuse
+        # the same FCM connection and deadline.
+        trail_uuid = str(uuid.uuid4())
+        current_uuid = str(uuid.uuid4())
+        request_uuids = {trail_uuid, current_uuid}
         responses = queue.Queue(maxsize=32)
         def callback(hex_payload):
             try:
                 update = proto.DeviceUpdate.FromString(bytes.fromhex(hex_payload))
-                if update.fcmMetadata.requestUuid == request_uuid and device_id in device_ids(update.deviceMetadata):
-                    responses.put_nowait(update)
+                if update.fcmMetadata.requestUuid in request_uuids and device_id in device_ids(update.deviceMetadata):
+                    responses.put_nowait((update.fcmMetadata.requestUuid, update))
             except Exception:
                 pass
         self.fcm = FCMTransport(self.remaining)
         token = self.fcm.start(callback)
-        action = create_action_request(device_id, token, request_uuid=request_uuid)
-        action.action.locateTracker.lastHighTrafficEnablingTime.seconds = 1732120060
-        action.action.locateTracker.contributorType = proto.FMDN_ALL_LOCATIONS
-        self.nova("nbe_execute_action", action.SerializeToString())
+
+        def locate(contributor_type, request_uuid, trail=False):
+            action = create_action_request(device_id, token, request_uuid=request_uuid)
+            if trail:
+                action.action.locateTracker.lastHighTrafficEnablingTime.seconds = 1732120060
+            action.action.locateTracker.contributorType = contributor_type
+            self.nova("nbe_execute_action", action.SerializeToString())
+
+        def await_response(request_uuid):
+            while True:
+                try:
+                    received_uuid, update = responses.get(timeout=self.remaining())
+                except queue.Empty:
+                    raise WorkerError("timeout") from None
+                if received_uuid == request_uuid:
+                    return update
+
+        locate(proto.FMDN_ALL_LOCATIONS, trail_uuid, trail=True)
+        trail_result = None
         try:
-            update = responses.get(timeout=self.remaining())
-        except queue.Empty:
-            raise WorkerError("timeout") from None
-        return normalize_update(update, device_id, self.owner_key())
+            trail_result = normalize_update(await_response(trail_uuid), device_id, self.owner_key())
+        except WorkerError as error:
+            if error.code != "decryption-error":
+                raise
+        if trail_result is None or not trail_result["sightings"]:
+            # No usable trail: fall back to the tracker's current location so
+            # the app still shows where it is right now.
+            locate(proto.FMDN_HIGH_TRAFFIC, current_uuid)
+            return normalize_update(await_response(current_uuid), device_id, self.owner_key())
+        return trail_result
 
     def execute(self):
         command = self.request["command"]

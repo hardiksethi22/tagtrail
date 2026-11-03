@@ -28,6 +28,61 @@ struct BrowserAuthentication: Sendable {
     }
 }
 
+/// Locates an already-installed Chromium-based browser and a user-supplied
+/// ChromeDriver. TagTrail never downloads or installs either.
+enum BrowserLocator {
+    /// Known Chromium-family app bundles, most Google-compatible first.
+    private static let browserCandidates: [(name: String, path: String)] = [
+        ("Google Chrome", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+        ("Google Chrome (user)", NSHomeDirectory() + "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+        ("Brave Browser", "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"),
+        ("Chromium", "/Applications/Chromium.app/Contents/MacOS/Chromium"),
+        ("Microsoft Edge", "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"),
+        ("Vivaldi", "/Applications/Vivaldi.app/Contents/MacOS/Vivaldi")
+    ]
+
+    private static let driverCandidates = [
+        "/opt/homebrew/bin/chromedriver",
+        "/usr/local/bin/chromedriver",
+        NSHomeDirectory() + "/.local/bin/chromedriver",
+        NSHomeDirectory() + "/chromedriver"
+    ]
+
+    /// First installed Chromium-family browser executable, if any.
+    static func detectBrowser() -> URL? {
+        browserCandidates
+            .map { URL(fileURLWithPath: $0.path) }
+            .first { FileManager.default.isExecutableFile(atPath: $0.path) }
+    }
+
+    static func detectedBrowserName() -> String? {
+        guard let url = detectBrowser() else { return nil }
+        return browserCandidates.first { URL(fileURLWithPath: $0.path) == url }?.name
+    }
+
+    /// First executable ChromeDriver found on common paths, if any.
+    static func detectDriver() -> URL? {
+        driverCandidates
+            .map { URL(fileURLWithPath: $0) }
+            .first { FileManager.default.isExecutableFile(atPath: $0.path) }
+    }
+
+    /// Chromium major version, used to explain ChromeDriver mismatches.
+    static func browserMajorVersion() -> Int? {
+        guard let browser = detectBrowser() else { return nil }
+        let info = browser
+            .deletingLastPathComponent() // MacOS
+            .deletingLastPathComponent() // Contents
+            .appendingPathComponent("Info.plist")
+        guard let data = try? Data(contentsOf: info),
+              let raw = try? PropertyListSerialization.propertyList(from: data, format: nil),
+              let plist = raw as? [String: Any],
+              let version = plist["CFBundleShortVersionString"] as? String,
+              let major = Int(version.split(separator: ".").first ?? "") else { return nil }
+        return major
+    }
+}
+
 enum ProviderFailure: Error, LocalizedError, Sendable {
     case authenticationRequired
     case credentialsLocked

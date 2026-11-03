@@ -38,7 +38,10 @@ class BrowserTests(unittest.TestCase):
             self.assertEqual(cache.get_cached_value("aas_token"), SECRET)
             driver.quit.assert_called_once()
             self.assertTrue(all("--headless" not in option for option in chrome.call_args.kwargs["options"].arguments))
-            self.assertEqual(list(Path("worker/browser-test-artifacts").iterdir()), [])
+            # The session-bearing auth profile is kept on purpose; per-attempt
+            # leftovers are the only thing removed.
+            self.assertEqual([entry.name for entry in Path("worker/browser-test-artifacts").iterdir()],
+                             ["auth-profile"])
         finally:
             adapter.close()
             shutil.rmtree("worker/browser-test-artifacts", ignore_errors=True)

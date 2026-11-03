@@ -23,21 +23,24 @@ struct TagTrailApp: App {
                 .environmentObject(model)
                 .frame(width: 440, height: 610)
         } label: {
-            TimelineView(.periodic(from: .now, by: 30)) { _ in
-                HStack(spacing: 4) {
-                    Image(systemName: "mappin.and.ellipse")
-                    Text(model.menuBarTitle)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                        .frame(maxWidth: 150)
-                }
-                    .accessibilityLabel(model.menuBarAccessibilityLabel)
+            // ponytail: no TimelineView here — a periodic label inside
+            // MenuBarExtra drives an AppKit status-item relayout loop
+            // (setImage -> _adjustLength -> layout -> new image -> ...) that
+            // burns a core and gigabytes of CoreUI rendition caches. Fixed
+            // width keeps _adjustLength convergent; title refreshes when the
+            // model publishes. Add a 60s timer in AppModel if staleness matters.
+            HStack(spacing: 4) {
+                Image(systemName: "mappin.and.ellipse")
+                Text(model.menuBarTitle)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .frame(width: 150, alignment: .leading)
             }
-
+            .accessibilityLabel(model.menuBarAccessibilityLabel)
         }
         .menuBarExtraStyle(.window)
 
-        Window("TagTrail — Full Map", id: "full-map") {
+        Window("Trail Map", id: "full-map") {
             FullMapWindow()
                 .environmentObject(model)
                 .frame(minWidth: 760, minHeight: 540)

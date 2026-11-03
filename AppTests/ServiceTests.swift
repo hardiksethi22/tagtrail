@@ -4,7 +4,6 @@ import XCTest
 #endif
 import TagTrailCore
 @testable import TagTrail
-
 final class ServiceTests: XCTestCase {
     private var directory: URL!
     private let epoch = Date(timeIntervalSince1970: 1_800_000_000)

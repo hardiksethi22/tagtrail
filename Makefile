@@ -15,13 +15,16 @@ ifeq ($(origin SDKROOT), undefined)
     endif
 endif
 
-.PHONY: bootstrap project test test-worker test-swift build run-demo run package smoke-packaged sign-local sign-release clean
+.PHONY: bootstrap project test test-worker test-swift build run-demo run package smoke-packaged sign-local sign-release icon clean
 
 bootstrap:
 	"$(SCRIPTS)/bootstrap.sh"
 
 project:
 	"$(SCRIPTS)/generate-project.sh"
+
+icon:
+	swift "$(SCRIPTS)/make-icon.swift" "$(ROOT)"
 
 test:
 	"$(SCRIPTS)/test-all.sh"
@@ -56,4 +59,4 @@ sign-release:
 
 clean:
 	cd "$(ROOT)" && swift package clean
-	rm -rf "$(ROOT)/.build/TagTrail.app" "$(ROOT)/.build/TagTrail-Dev.app" "$(ROOT)/.build/pyinstaller" "$(ROOT)/dist/TagTrail-arm64" "$(ROOT)/dist/TagTrail-x86_64"
+	rm -rf "$(ROOT)/.build" "$(ROOT)/dist"

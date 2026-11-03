@@ -329,9 +329,11 @@ class AdapterTests(unittest.TestCase):
         tracker = Mock()
         callback_holder = {}
         tracker.start.side_effect = lambda callback: callback_holder.update(callback=callback) or "registration"
+        sent = []
         def nova(scope, encoded):
             _, proto, _ = load_upstream()
             action = proto.ExecuteActionRequest.FromString(encoded)
+            sent.append(action)
             fixture = update()
             fixture.fcmMetadata.requestUuid = "wrong"
             callback_holder["callback"](fixture.SerializeToString().hex())
@@ -344,6 +346,75 @@ class AdapterTests(unittest.TestCase):
         with patch.object(self.adapter, "list_devices", return_value={"devices": [{"id": "synthetic-tracker"}]}), patch("worker.adapter.FCMTransport", return_value=tracker), patch.object(self.adapter, "nova", side_effect=nova):
             result = self.adapter.poll()
         self.assertEqual(len(result["sightings"]), 2)
+        _, proto, _ = load_upstream()
+        self.assertEqual(len(sent), 1)
+        self.assertEqual(sent[0].action.locateTracker.contributorType, proto.FMDN_ALL_LOCATIONS)
+        self.assertEqual(sent[0].action.locateTracker.lastHighTrafficEnablingTime.seconds, 1732120060)
+        tracker.start.assert_called_once()
+        self.adapter.close()
+        tracker.close.assert_called()
+
+    def test_poll_falls_back_to_current_location_when_trail_is_empty(self):
+        self.adapter.request["device_id"] = "synthetic-tracker"
+        tracker = Mock()
+        callback_holder = {}
+        tracker.start.side_effect = lambda callback: callback_holder.update(callback=callback) or "registration"
+        sent = []
+        def nova(scope, encoded):
+            _, proto, _ = load_upstream()
+            action = proto.ExecuteActionRequest.FromString(encoded)
+            sent.append(action)
+            if len(sent) == 1:
+                # Trail response: no location information at all.
+                response = proto.DeviceUpdate()
+                response.deviceMetadata.CopyFrom(device_list().deviceMetadata[0])
+            else:
+                # Current-location response.
+                response = update()
+            response.fcmMetadata.requestUuid = action.requestMetadata.requestUuid
+            callback_holder["callback"](response.SerializeToString().hex())
+            return b""
+        with patch.object(self.adapter, "list_devices", return_value={"devices": [{"id": "synthetic-tracker"}]}), patch("worker.adapter.FCMTransport", return_value=tracker), patch.object(self.adapter, "nova", side_effect=nova):
+            result = self.adapter.poll()
+        self.assertEqual(len(result["sightings"]), 2)
+        _, proto, _ = load_upstream()
+        self.assertEqual(len(sent), 2)
+        self.assertEqual(sent[0].action.locateTracker.contributorType, proto.FMDN_ALL_LOCATIONS)
+        self.assertEqual(sent[1].action.locateTracker.contributorType, proto.FMDN_HIGH_TRAFFIC)
+        self.assertNotEqual(sent[0].requestMetadata.requestUuid, sent[1].requestMetadata.requestUuid)
+        tracker.start.assert_called_once()
+        self.adapter.close()
+        tracker.close.assert_called()
+
+    def test_poll_falls_back_to_current_location_when_trail_undecryptable(self):
+        self.adapter.request["device_id"] = "synthetic-tracker"
+        tracker = Mock()
+        callback_holder = {}
+        tracker.start.side_effect = lambda callback: callback_holder.update(callback=callback) or "registration"
+        sent = []
+        def nova(scope, encoded):
+            _, proto, _ = load_upstream()
+            action = proto.ExecuteActionRequest.FromString(encoded)
+            sent.append(action)
+            if len(sent) == 1:
+                # Trail response whose reports all fail decryption.
+                response = update()
+                reports = response.deviceMetadata.information.locationInformation.reports.recentLocationAndNetworkLocations
+                reports.networkLocations[0].geoLocation.encryptedReport.encryptedLocation = b"corrupt"
+                del reports.networkLocations[1]
+                del reports.networkLocationTimestamps[1]
+            else:
+                response = update()
+            response.fcmMetadata.requestUuid = action.requestMetadata.requestUuid
+            callback_holder["callback"](response.SerializeToString().hex())
+            return b""
+        with patch.object(self.adapter, "list_devices", return_value={"devices": [{"id": "synthetic-tracker"}]}), patch("worker.adapter.FCMTransport", return_value=tracker), patch.object(self.adapter, "nova", side_effect=nova):
+            result = self.adapter.poll()
+        self.assertEqual(len(result["sightings"]), 2)
+        _, proto, _ = load_upstream()
+        self.assertEqual(len(sent), 2)
+        self.assertEqual(sent[0].action.locateTracker.contributorType, proto.FMDN_ALL_LOCATIONS)
+        self.assertEqual(sent[1].action.locateTracker.contributorType, proto.FMDN_HIGH_TRAFFIC)
         tracker.start.assert_called_once()
         self.adapter.close()
         tracker.close.assert_called()

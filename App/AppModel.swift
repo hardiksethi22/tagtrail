@@ -76,6 +76,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var semanticPlace: SemanticPlace?
     @Published private(set) var networkAvailable = true
 
+    private let maxAddressCache = 100
     private let clock: any TagTrailClock
     private let credentialStore = KeychainCredentialStore()
     private let worker: WorkerProcessClient
@@ -90,6 +91,7 @@ final class AppModel: ObservableObject {
     private var geocodingService: GeocodingService?
     private var lastRetentionSweepMS: Int64 = 0
     private var workspaceObservers: [NSObjectProtocol] = []
+    private var memoryPressureSource: DispatchSourceMemoryPressure?
     private var sleeping = false
 
     init(clock: any TagTrailClock = SystemTagTrailClock()) {
@@ -112,7 +114,11 @@ final class AppModel: ObservableObject {
             }
         }
         observePowerState()
-        if UserDefaults.standard.bool(forKey: "TagTrail.demoMode") {
+        observeMemoryPressure()
+        // Demo is a per-launch flag (`-TagTrail.demoMode YES`), not a persisted
+        // preference: persisting it made `make run` boot into demo mode.
+        let launchDemo = UserDefaults.standard.bool(forKey: "TagTrail.demoMode")
+        if launchDemo {
             Task { await enterDemo() }
         } else if UserDefaults.standard.bool(forKey: "TagTrail.onboardingComplete") {
             Task { await restoreLiveConnection() }
@@ -123,7 +129,9 @@ final class AppModel: ObservableObject {
         schedulerTask?.cancel()
         operationTask?.cancel()
         connectivityMonitor.stop()
-        workspaceObservers.forEach(NotificationCenter.default.removeObserver)
+        memoryPressureSource?.cancel()
+        let center = NSWorkspace.shared.notificationCenter
+        workspaceObservers.forEach(center.removeObserver)
     }
 
     var selectedDevice: TrackerDevice? { devices.first { $0.id == selectedDeviceID } }
@@ -160,7 +168,9 @@ final class AppModel: ObservableObject {
             profileID = "demo-profile"
             isDemoMode = true
             onboardingComplete = true
-            UserDefaults.standard.set(true, forKey: "TagTrail.demoMode")
+            // Demo is a per-launch choice, never a persisted preference;
+            // persisting it made the next `make run` boot into demo mode.
+            UserDefaults.standard.removeObject(forKey: "TagTrail.demoMode")
             UserDefaults.standard.set(true, forKey: "TagTrail.onboardingComplete")
             try await demoDB.upsertProfile(id: profileID, provider: "demo", label: "Demo data")
             let found = try await demoProvider.discover()
@@ -469,17 +479,30 @@ final class AppModel: ObservableObject {
     func updateAddress() async {
         guard let sighting = selectedSighting else { return }
         if isDemoMode {
-            if let value = sighting.semanticLabel { addresses[sighting.id] = value }
+            if let value = sighting.semanticLabel {
+                pruneAddressCache()
+                addresses[sighting.id] = value
+            }
             return
         }
         guard let service = geocodingService else { return }
         do {
             if let value = try await service.address(for: sighting, enabled: isGeocodingEnabled, demo: false) {
+                pruneAddressCache()
                 addresses[sighting.id] = value
             }
         } catch {
             statusMessage = "The address cache could not be updated. Coordinates remain available."
         }
+    }
+
+    /// Keeps the in-memory address cache bounded so browsing many sightings
+    /// does not leak memory.
+    private func pruneAddressCache() {
+        guard addresses.count > maxAddressCache else { return }
+        // Drop the oldest half of entries to keep the cache small.
+        let toRemove = addresses.keys.prefix(addresses.count / 2)
+        for key in toRemove { addresses[key] = nil }
     }
 
     func saveSemanticPlace(label: String, coordinate: String) async {
@@ -605,10 +628,16 @@ final class AppModel: ObservableObject {
         let all = try await database.latestObservations(deviceID: selectedDeviceID, sinceMS: historyWindow.cutoff(nowMS: Int64(clock.now.timeIntervalSince1970 * 1000)), limit: ObservationHistory.displayLimit)
         let latest = try await database.latestObservations(deviceID: selectedDeviceID, limit: 1).last
         guard self.selectedDeviceID == selectedDeviceID else { return }
-        observations = all
+        // When the trail has nothing in the selected window, still surface the
+        // tracker's current location so the map and feed never look empty.
+        var displayed = all
+        if displayed.isEmpty, let latest {
+            displayed = [latest]
+        }
+        observations = displayed
         latestObservation = latest
-        if let id = selectedSightingID, !all.contains(where: { $0.id == id }) { selectedSightingID = nil }
-        if selectedSightingID == nil { selectedSightingID = all.last?.id }
+        if let id = selectedSightingID, !displayed.contains(where: { $0.id == id }) { selectedSightingID = nil }
+        if selectedSightingID == nil { selectedSightingID = displayed.last?.id }
         await updateAddress()
     }
 
@@ -762,6 +791,31 @@ final class AppModel: ObservableObject {
                 self?.startScheduler()
             }
         })
+    }
+
+    /// Reacts to system memory pressure by flushing in-memory caches
+    /// (addresses, observations) so the app does not contribute to
+    /// system-wide RAM exhaustion.
+    private func observeMemoryPressure() {
+        let source = DispatchSource.makeMemoryPressureSource(
+            eventMask: [.warning, .critical],
+            queue: .main
+        )
+        source.setEventHandler { [weak self] in
+            guard let self else { return }
+            let pressure = source.data
+            Task { @MainActor in
+                if pressure.contains(.critical) {
+                    self.addresses.removeAll(keepingCapacity: false)
+                    self.observations.removeAll(keepingCapacity: true)
+                    self.latestObservation = nil
+                } else if pressure.contains(.warning) {
+                    self.pruneAddressCache()
+                }
+            }
+        }
+        source.resume()
+        memoryPressureSource = source
     }
 
     private static func relativeTime(_ timestampMS: Int64, now: Date) -> String {

@@ -55,9 +55,11 @@ and an explicit `browser_helper` configuration. See **Explicit local browser
 helper** in `worker/README.md` for the exact local invocation. Do not run it
 with an ordinary shell transcript: credential-update stdout is secret-bearing
 and must be captured by a trusted parent for Keychain persistence, not logged.
-The helper creates permission-restricted temporary browser artifacts, cleans
-owned artifacts on shutdown, and is not a disk-free authentication flow.
-Power loss or force-kill can leave artifacts requiring local owner cleanup.
+The helper keeps one permission-restricted sign-in profile under its data
+directory so the Google session is remembered between attempts, reuses the
+user's existing browser session when macOS privacy settings allow, and is not
+a disk-free authentication flow. Delete the `browser-artifacts` folder there
+to sign the helper out.
 
 Select the first tracker to enable scheduled collection; other devices require
 explicit enabling. Live discovery and decryption remain unverified until

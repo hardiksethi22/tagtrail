@@ -146,12 +146,15 @@ driver/browser, verifies captured process creation times before escalation,
 and never kills unrelated Chrome instances.
 
 The helper's working directory must be writable. `artifact_directory` must
-be relative and contained in that directory. A unique mode-0700 profile,
-cache, and crash-dump directory are created under it, and removed after
-shutdown. This flow **does create sensitive browser disk artifacts** while
-authentication runs; it is not disk-free. A parent force-kill/power loss can
-leave an owned profile behind, requiring documented cleanup. ChromeDriver/
-Chrome authentication was not exercised with a real account here.
+be relative and contained in that directory. A persistent mode-0700
+`auth-profile` is kept under it so the Google session survives between
+attempts (retries start already signed in); stale per-attempt directories are
+removed on startup. When macOS privacy settings allow, the user's existing
+browser cookies are copied into a fresh profile first so sign-in can reuse
+their current session. This flow **does create sensitive browser disk
+artifacts**; it is not disk-free. Delete `browser-artifacts/auth-profile` to
+sign the helper out. ChromeDriver/Chrome authentication was not exercised
+with a real account here.
 
 ## Verification boundary
 
